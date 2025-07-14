@@ -1,11 +1,16 @@
 from flask import Flask, request, jsonify
 import requests
 from flask_cors import CORS
+import os
 
 app = Flask(__name__)
-CORS(app)  # HTML frontenddan kirishga ruxsat beradi
+CORS(app)
 
-MISTRAL_API_KEY = "9JZcncIN9tSDXyA00KqX6f2GC7soAEW0"
+MISTRAL_API_KEY = os.environ.get("MISTRAL_API_KEY")
+
+@app.route('/')
+def home():
+    return '✅ MathGenius AI server ishlayapti!'
 
 @app.route('/ask', methods=['POST'])
 def ask():
@@ -41,4 +46,5 @@ def ask():
         return jsonify({"error": f"❌ Xatolik: {response.status_code}"}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
