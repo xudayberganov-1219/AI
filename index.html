@@ -448,11 +448,14 @@
         addMessageToChat(loadingMessage);
 
         try {
-            const res = await fetch("https://mathgenius-ilyos.onrender.com/ask", ...), {
+           const res = await fetch("https://mathgenius-ilyos.onrender.com/ask", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json"
+                },
                 body: JSON.stringify({ question: q })
             });
+
 
             const data = await res.json();
 
