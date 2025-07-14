@@ -350,151 +350,94 @@
       <p style="margin-left: 1rem;">Ilyos Xudaybergaov tomonidan yaratilgan.</p>
   </footer>
   <script>
-      const chat = document.getElementById("chat-area");
-      const textarea = document.getElementById("question");
-      const sendBtn = document.getElementById("sendBtn");
-      const themeToggleButton = document.querySelector('.theme-toggle-button');
+    const chat = document.getElementById("chat-area");
+    const textarea = document.getElementById("question");
+    const sendBtn = document.getElementById("sendBtn");
+    const themeToggleButton = document.querySelector('.theme-toggle-button');
 
-      const initialMessage = {
-          role: "assistant",
-          content: "Assalomu alaykum! Men MathGenius AI yordamchingizman. Istalgan savolni yozing — men rasm va matn shaklida javob beraman. Sizga qanday yordam bera olaman?"
-      };
+    async function askAPIWithRetry(question, retries = 3, delay = 1500) {
+        for (let i = 0; i < retries; i++) {
+            try {
+                const res = await fetch("https://math-genius.onrender.com/ask", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ question })
+                });
 
-      function addMessageToChat(message) {
-          const messageContainer = document.createElement("div");
-          messageContainer.className = `message-bubble-container ${message.role}`;
+                if (res.status === 429) {
+                    if (i < retries - 1) {
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                        continue;
+                    } else {
+                        return { error: "429 - Juda ko‘p so‘rov. Iltimos, biroz kuting va yana urinib ko‘ring." };
+                    }
+                }
 
-          const avatar = document.createElement("div");
-          avatar.className = "avatar";
-          avatar.innerText = message.role === "user" ? "Siz" : "AI";
+                return await res.json();
+            } catch (err) {
+                if (i < retries - 1) {
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                } else {
+                    return { error: "Tarmoq xatoligi: " + err.message };
+                }
+            }
+        }
+    }
 
-          const messageContentDiv = document.createElement("div");
-          messageContentDiv.className = "message-content";
+    async function send() {
+        const q = textarea.value.trim();
+        if (!q) return;
 
-          if (message.type === "latex") {
-              const textPart = document.createElement("p");
-              textPart.innerText = message.content;
-              messageContentDiv.appendChild(textPart);
+        addMessageToChat({ role: "user", content: q, type: "text" });
+        textarea.value = "";
+        sendBtn.disabled = true;
 
-              const latexImageContainer = document.createElement("div");
-              latexImageContainer.className = "latex-image-container";
-              const latexImage = document.createElement("img");
-              latexImage.src = message.latexImageUrl || "/placeholder.svg?height=100&width=300";
-              latexImage.alt = "Matematik formula";
-              const latexCaption = document.createElement("p");
-              latexCaption.innerText = "(Yuqoridagi formula LaTeX formatida berilgan javobdir)";
-              latexImageContainer.appendChild(latexImage);
-              latexImageContainer.appendChild(latexCaption);
-              messageContentDiv.appendChild(latexImageContainer);
-          } else {
-              const textPart = document.createElement("p");
-              textPart.innerText = message.content;
-              messageContentDiv.appendChild(textPart);
-          }
+        const loadingMessageContainer = document.createElement("div");
+        loadingMessageContainer.className = `message-bubble-container assistant loading-indicator`;
 
-          if (message.role === "user") {
-              messageContainer.appendChild(messageContentDiv);
-              messageContainer.appendChild(avatar);
-          } else {
-              messageContainer.appendChild(avatar);
-              messageContainer.appendChild(messageContentDiv);
-          }
+        const avatar = document.createElement("div");
+        avatar.className = "avatar";
+        avatar.innerText = "AI";
 
-          chat.appendChild(messageContainer);
-          chat.scrollTop = chat.scrollHeight;
-          return messageContainer; // Return the created message container
-      }
+        const messageContentDiv = document.createElement("div");
+        messageContentDiv.className = "message-content";
 
-      document.addEventListener('DOMContentLoaded', () => {
-          addMessageToChat(initialMessage);
-          autoResize(textarea);
-      });
+        const loadingDotsContainer = document.createElement("div");
+        loadingDotsContainer.className = "loading-dots";
+        for (let i = 0; i < 3; i++) {
+            const dot = document.createElement("span");
+            loadingDotsContainer.appendChild(dot);
+        }
+        messageContentDiv.appendChild(loadingDotsContainer);
 
-      textarea.addEventListener("input", () => {
-          autoResize(textarea);
-          sendBtn.disabled = textarea.value.trim().length === 0;
-      });
+        loadingMessageContainer.appendChild(avatar);
+        loadingMessageContainer.appendChild(messageContentDiv);
+        chat.appendChild(loadingMessageContainer);
+        chat.scrollTop = chat.scrollHeight;
 
-      function autoResize(textarea) {
-          textarea.style.height = 'auto';
-          textarea.style.height = textarea.scrollHeight + 'px';
-      }
+        const data = await askAPIWithRetry(q, 3, 2000);
+        loadingMessageContainer.remove();
 
-      function toggleTheme() {
-          document.body.classList.toggle("dark-mode");
-          const isDarkMode = document.body.classList.contains("dark-mode");
-          themeToggleButton.innerHTML = isDarkMode
-              ? '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>'
-              : '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 17.66l1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M4.93 19.07l1.41-1.41"/><path d="M17.66 6.34l1.41-1.41"/></svg>';
-      }
+        if (data.error) {
+            addMessageToChat({ role: "assistant", content: "❌ Xatolik: " + data.error, type: "text" });
+        } else if (data.latex_image_url) {
+            addMessageToChat({
+                role: "assistant",
+                content: data.answer,
+                type: "latex",
+                latexImageUrl: data.latex_image_url
+            });
+        } else {
+            addMessageToChat({
+                role: "assistant",
+                content: data.answer || "❗ Javob topilmadi.",
+                type: "text"
+            });
+        }
+    }
+</script>
 
-      async function send() {
-          const q = textarea.value.trim();
-          if (!q) return;
-
-          addMessageToChat({ role: "user", content: q, type: "text" });
-          textarea.value = "";
-          sendBtn.disabled = true;
-
-          // Create and add the loading message element with animation
-          const loadingMessageContainer = document.createElement("div");
-          loadingMessageContainer.className = `message-bubble-container assistant loading-indicator`; // Add a class to easily identify
-
-          const avatar = document.createElement("div");
-          avatar.className = "avatar";
-          avatar.innerText = "AI";
-
-          const messageContentDiv = document.createElement("div");
-          messageContentDiv.className = "message-content";
-
-          const loadingDotsContainer = document.createElement("div");
-          loadingDotsContainer.className = "loading-dots";
-          for (let i = 0; i < 3; i++) {
-              const dot = document.createElement("span");
-              loadingDotsContainer.appendChild(dot);
-          }
-          messageContentDiv.appendChild(loadingDotsContainer);
-
-          loadingMessageContainer.appendChild(avatar);
-          loadingMessageContainer.appendChild(messageContentDiv);
-          chat.appendChild(loadingMessageContainer);
-          chat.scrollTop = chat.scrollHeight;
-
-          try {
-              const res = await fetch("https://math-genius.onrender.com/ask", {
-                  method: "POST",
-                  headers: {
-                      "Content-Type": "application/json"
-                  },
-                  body: JSON.stringify({ question: q })
-              });
-              const data = await res.json();
-
-              // Remove the loading message
-              loadingMessageContainer.remove();
-
-              if (data.error) {
-                  addMessageToChat({ role: "assistant", content: "❌ Xatolik: " + data.error, type: "text" });
-              } else if (data.latex_image_url) {
-                  addMessageToChat({
-                      role: "assistant",
-                      content: data.answer,
-                      type: "latex",
-                      latexImageUrl: data.latex_image_url
-                  });
-              } else {
-                  addMessageToChat({
-                      role: "assistant",
-                      content: data.answer || "❗ Javob topilmadi.",
-                      type: "text"
-                  });
-              }
-          } catch (err) {
-              // Remove the loading message even on error
-              loadingMessageContainer.remove();
-              addMessageToChat({ role: "assistant", content: "❌ Tarmoqda xatolik: " + err.message, type: "text" });
-          }
-      }
-  </script>
 </body>
 </html>
