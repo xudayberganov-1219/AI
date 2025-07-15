@@ -3,40 +3,41 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MathGenius AI Yordamchi</title>
+  <title>Mista AI - Kod Yozish Yordamchisi</title>
   <link rel="icon" type="image/png" href="logo.jpg" />
   <style>
-      /* Global CSS Variables for Professional Theme (ChatGPT-like) */
+      /* Global CSS Variables for Professional Theme */
       :root {
-          --background: #ffffff; /* White */
-          --foreground: #202123; /* Dark Gray */
-          --primary: #10a37f; /* ChatGPT Green */
-          --primary-foreground: #ffffff; /* White text on primary */
-          --secondary: #f7f7f8; /* Light Gray for secondary elements */
-          --secondary-foreground: #202123; /* Dark text on secondary */
-          --muted: #f0f0f0; /* Very Light Gray for muted backgrounds */
-          --muted-foreground: #6b7280; /* Medium Gray for muted text */
-          --border: #e0e0e0; /* Light border */
-          --input: #e0e0e0; /* Light input border */
-          --card-background: #ffffff; /* White card background */
-          --card-border: #e0e0e0; /* Light card border */
-          /* MathGenius Logo Colors */
-          --mg-green: #00E676;
-          --mg-blue: #00B0FF;
+          --background: #ffffff;
+          --foreground: #202123;
+          --primary: #6d28d9; /* Purple primary color */
+          --primary-foreground: #ffffff;
+          --secondary: #f7f7f8;
+          --secondary-foreground: #202123;
+          --muted: #f0f0f0;
+          --muted-foreground: #6b7280;
+          --border: #e0e0e0;
+          --input: #e0e0e0;
+          --card-background: #ffffff;
+          --card-border: #e0e0e0;
+          --code-background: #1e1e1e;
+          --code-foreground: #d4d4d4;
       }
       .dark-mode {
-          --background: #202123; /* Dark background */
-          --foreground: #ececf1; /* Light Gray */
-          --primary: #10a37f; /* ChatGPT Green (same for dark mode) */
-          --primary-foreground: #ffffff; /* White text on primary */
-          --secondary: #343541; /* Darker Gray for secondary elements */
-          --secondary-foreground: #ececf1; /* Light text on secondary */
-          --muted: #444654; /* Dark Gray for muted backgrounds */
-          --muted-foreground: #a0aec0; /* Light Gray for muted text */
-          --border: #565869; /* Dark border */
-          --input: #565869; /* Dark input border */
-          --card-background: #343541; /* Dark card background */
-          --card-border: #565869; /* Dark card border */
+          --background: #202123;
+          --foreground: #ececf1;
+          --primary: #7c3aed;
+          --primary-foreground: #ffffff;
+          --secondary: #343541;
+          --secondary-foreground: #ececf1;
+          --muted: #444654;
+          --muted-foreground: #a0aec0;
+          --border: #565869;
+          --input: #565869;
+          --card-background: #343541;
+          --card-border: #565869;
+          --code-background: #1e1e1e;
+          --code-foreground: #d4d4d4;
       }
       body {
           margin: 0;
@@ -63,24 +64,20 @@
           gap: 0.5rem;
       }
       .logo-container img {
-          height: 32px; /* Slightly smaller for header */
+          height: 32px;
           width: 32px;
+          border-radius: 50%;
       }
       .logo-text {
-          font-size: 1.25rem; /* Adjusted font size */
+          font-size: 1.25rem;
           font-weight: bold;
-      }
-      .logo-text .math {
-          color: var(--mg-green);
-      }
-      .logo-text .genius {
-          color: var(--mg-blue);
+          color: var(--primary);
       }
       .theme-toggle-button {
           background: none;
           border: none;
           cursor: pointer;
-          font-size: 1.2rem; /* Adjusted icon size */
+          font-size: 1.2rem;
           color: var(--foreground);
           padding: 0.5rem;
           border-radius: 0.375rem;
@@ -104,7 +101,7 @@
       }
       .chat-area {
           flex: 1;
-          background-color: var(--secondary); /* Lighter background for chat area */
+          background-color: var(--secondary);
           border-radius: 0.5rem;
           padding: 1rem;
           overflow-y: auto;
@@ -115,7 +112,7 @@
       }
       .message-bubble-container {
           display: flex;
-          align-items: flex-start; /* Align to top for multi-line messages */
+          align-items: flex-start;
           gap: 0.75rem;
           margin-bottom: 1rem;
           max-width: 100%;
@@ -127,7 +124,7 @@
           justify-content: flex-start;
       }
       .avatar {
-          flex-shrink: 0; /* Prevent avatar from shrinking */
+          flex-shrink: 0;
           width: 32px;
           height: 32px;
           border-radius: 50%;
@@ -141,48 +138,101 @@
           text-transform: uppercase;
       }
       .message-bubble-container.user .avatar {
-          background-color: #a0a0a0; /* Neutral gray for user avatar */
+          background-color: #a0a0a0;
       }
       .message-content {
-          max-width: calc(100% - 32px - 0.75rem); /* Account for avatar and gap */
+          max-width: calc(100% - 32px - 0.75rem);
           padding: 0.75rem 1rem;
           border-radius: 0.75rem;
           box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
           line-height: 1.5;
           font-size: 0.9rem;
-          word-wrap: break-word; /* Ensure long words break */
+          word-wrap: break-word;
       }
       .message-bubble-container.user .message-content {
           background-color: var(--primary);
           color: var(--primary-foreground);
-          border-bottom-right-radius: 0.25rem; /* Small tail effect */
+          border-bottom-right-radius: 0.25rem;
       }
       .message-bubble-container.assistant .message-content {
           background-color: var(--card-background);
           color: var(--foreground);
-          border-bottom-left-radius: 0.25rem; /* Small tail effect */
-          border: 1px solid var(--border); /* Add border for assistant messages */
+          border-bottom-left-radius: 0.25rem;
+          border: 1px solid var(--border);
       }
-      .message-content .latex-image-container {
-          background-color: var(--card-background);
-          padding: 0.5rem;
+      /* Code block styling */
+      .code-block {
+          position: relative;
+          margin: 0.5rem 0;
           border-radius: 0.375rem;
-          border: 1px solid var(--card-border);
+          overflow: hidden;
+          border: 1px solid var(--border);
+      }
+      .code-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 0.5rem 1rem;
+          background-color: var(--code-background);
+          color: var(--code-foreground);
+          font-family: monospace;
+          font-size: 0.8rem;
+      }
+      .code-actions {
+          display: flex;
+          gap: 0.5rem;
+      }
+      .code-action-btn {
+          background: none;
+          border: none;
+          color: var(--code-foreground);
+          cursor: pointer;
+          font-size: 0.8rem;
+          display: flex;
+          align-items: center;
+          gap: 0.25rem;
+          padding: 0.25rem 0.5rem;
+          border-radius: 0.25rem;
+          transition: background-color 0.2s ease;
+      }
+      .code-action-btn:hover {
+          background-color: rgba(255, 255, 255, 0.1);
+      }
+      .code-action-btn svg {
+          width: 14px;
+          height: 14px;
+      }
+      pre {
+          margin: 0;
+          padding: 1rem;
+          background-color: var(--code-background);
+          color: var(--code-foreground);
+          font-family: 'Courier New', Courier, monospace;
+          font-size: 0.85rem;
+          overflow-x: auto;
+      }
+      /* Explanation styling */
+      .explanation {
+          background-color: var(--muted);
+          padding: 0.75rem 1rem;
+          border-radius: 0.375rem;
+          margin: 0.5rem 0;
+          font-size: 0.9rem;
+          line-height: 1.5;
+      }
+      /* Run result styling */
+      .run-result {
           margin-top: 0.5rem;
-          display: inline-block; /* To wrap content */
+          padding: 0.75rem 1rem;
+          background-color: var(--muted);
+          border-radius: 0.375rem;
+          border-left: 3px solid var(--primary);
       }
-      .message-content .latex-image-container img {
-          max-width: 100%;
-          height: auto;
-          display: block;
+      .run-result-title {
+          font-weight: bold;
+          margin-bottom: 0.5rem;
+          color: var(--primary);
       }
-      .message-content .latex-image-container p {
-          font-size: 0.7rem;
-          color: var(--muted-foreground);
-          margin-top: 0.25rem;
-          text-align: center;
-      }
-
       /* Loading Dots Animation */
       .loading-dots {
           display: flex;
@@ -211,7 +261,6 @@
               transform: scale(1);
           }
       }
-
       .input-area {
           display: flex;
           align-items: flex-end;
@@ -225,8 +274,8 @@
       }
       .input-area textarea {
           flex: 1;
-          min-height: 48px; /* Increased min-height */
-          max-height: 150px; /* Max height for textarea */
+          min-height: 48px;
+          max-height: 150px;
           resize: none;
           padding: 0.75rem 1rem;
           border: 1px solid var(--input);
@@ -239,7 +288,7 @@
       .input-area textarea:focus {
           outline: none;
           border-color: var(--primary);
-          box-shadow: 0 0 0 2px rgba(16, 163, 127, 0.2); /* Use primary color for focus ring */
+          box-shadow: 0 0 0 2px rgba(109, 40, 217, 0.2);
       }
       .send-button {
           background-color: var(--primary);
@@ -252,11 +301,11 @@
           justify-content: center;
           align-items: center;
           transition: background-color 0.2s ease, opacity 0.2s ease;
-          height: 48px; /* Match textarea height */
+          height: 48px;
           width: 48px;
       }
       .send-button:hover:not(:disabled) {
-          background-color: #0e8a6a; /* Darker green for hover */
+          background-color: #5b21b6;
       }
       .send-button:disabled {
           opacity: 0.5;
@@ -325,10 +374,8 @@
 <body class="light-mode">
   <header>
       <div class="logo-container">
-          <img src="./logo.jpg" alt="MathGenius Logo" />
-          <h1 class="logo-text">
-              <span class="math">Math</span><span class="genius">Genius</span>
-          </h1>
+          <img src="./logo.jpg" alt="Mista AI Logo" />
+          <h1 class="logo-text">Mista AI</h1>
       </div>
       <button class="theme-toggle-button" aria-label="Mavzuni almashtirish" onclick="toggleTheme()">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 17.66l1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M4.93 19.07l1.41-1.41"/><path d="M17.66 6.34l1.41-1.41"/></svg>
@@ -339,14 +386,14 @@
           <!-- Messages will be dynamically added here by JavaScript -->
       </div>
       <div class="input-area">
-          <textarea id="question" rows="1" placeholder="Savolingizni kiriting..." oninput="autoResize(this)"></textarea>
+          <textarea id="question" rows="1" placeholder="Savolingizni yoki kod so'rovingizni kiriting..." oninput="autoResize(this)"></textarea>
           <button onclick="send()" id="sendBtn" class="send-button" disabled>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send"><path d="m22 2-7 20-4-9-9-4 20-7Z"/><path d="M22 2 11 13"/></svg>
           </button>
       </div>
   </main>
   <footer>
-      <p>Qo'shimcha ✨ | <a href="https://t.me/mathgeniusai_bot" target="_blank" rel="noopener noreferrer">Telegram Bot</a></p>
+      <p>Qo'shimcha ✨ | <a href="https://t.me/mistaai_bot" target="_blank" rel="noopener noreferrer">Telegram Bot</a></p>
       <p style="margin-left: 1rem;">Ilyos Xudaybergaov tomonidan yaratilgan.</p>
   </footer>
   <script>
@@ -357,7 +404,7 @@
 
       const initialMessage = {
           role: "assistant",
-          content: "Assalomu alaykum! Men MathGenius AI yordamchingizman. Istalgan savolni yozing — men rasm va matn shaklida javob beraman. Sizga qanday yordam bera olaman?"
+          content: "Assalomu alaykum! Men Mista AI yordamchingizman. Kod yozishda yoki dasturlashga oid savollaringizga javob bera olaman. Kod so'rovlaringizda men kodni alohida blokda ko'rsatib, tushuntirish matnini beraman va kodni nusxalash va ishga tushirish imkoniyatini taqdim etaman. Sizga qanday yordam bera olaman?"
       };
 
       function addMessageToChat(message) {
@@ -371,25 +418,68 @@
           const messageContentDiv = document.createElement("div");
           messageContentDiv.className = "message-content";
 
-          if (message.type === "latex") {
-              const textPart = document.createElement("p");
-              textPart.innerText = message.content;
-              messageContentDiv.appendChild(textPart);
+          if (message.type === "code") {
+              // Add explanation if exists
+              if (message.explanation) {
+                  const explanationDiv = document.createElement("div");
+                  explanationDiv.className = "explanation";
+                  explanationDiv.innerHTML = message.explanation;
+                  messageContentDiv.appendChild(explanationDiv);
+              }
 
-              const latexImageContainer = document.createElement("div");
-              latexImageContainer.className = "latex-image-container";
-              const latexImage = document.createElement("img");
-              latexImage.src = message.latexImageUrl || "/placeholder.svg?height=100&width=300";
-              latexImage.alt = "Matematik formula";
-              const latexCaption = document.createElement("p");
-              latexCaption.innerText = "(Yuqoridagi formula LaTeX formatida berilgan javobdir)";
-              latexImageContainer.appendChild(latexImage);
-              latexImageContainer.appendChild(latexCaption);
-              messageContentDiv.appendChild(latexImageContainer);
+              // Add code block
+              const codeBlockDiv = document.createElement("div");
+              codeBlockDiv.className = "code-block";
+
+              const codeHeader = document.createElement("div");
+              codeHeader.className = "code-header";
+              codeHeader.innerHTML = `<span>${message.language || 'code'}</span>`;
+
+              const codeActions = document.createElement("div");
+              codeActions.className = "code-actions";
+
+              const copyBtn = document.createElement("button");
+              copyBtn.className = "code-action-btn";
+              copyBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> Nusxalash`;
+              copyBtn.onclick = () => {
+                  navigator.clipboard.writeText(message.code);
+                  copyBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check"><path d="M20 6 9 17l-5-5"/></svg> Nusxalandi!`;
+                  setTimeout(() => {
+                      copyBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> Nusxalash`;
+                  }, 2000);
+              };
+
+              const runBtn = document.createElement("button");
+              runBtn.className = "code-action-btn";
+              runBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play"><polygon points="5 3 19 12 5 21 5 3"/></svg> Ishga tushirish`;
+              runBtn.onclick = () => {
+                  runCode(message.code, message.language, messageContainer);
+              };
+
+              codeActions.appendChild(copyBtn);
+              codeActions.appendChild(runBtn);
+              codeHeader.appendChild(codeActions);
+              codeBlockDiv.appendChild(codeHeader);
+
+              const pre = document.createElement("pre");
+              pre.textContent = message.code;
+              codeBlockDiv.appendChild(pre);
+
+              messageContentDiv.appendChild(codeBlockDiv);
+
+              // Add run result if exists
+              if (message.runResult) {
+                  const runResultDiv = document.createElement("div");
+                  runResultDiv.className = "run-result";
+                  runResultDiv.innerHTML = `
+                      <div class="run-result-title">Natija:</div>
+                      <div>${message.runResult}</div>
+                  `;
+                  messageContentDiv.appendChild(runResultDiv);
+              }
           } else {
-              const textPart = document.createElement("p");
-              textPart.innerText = message.content;
-              messageContentDiv.appendChild(textPart);
+              // Regular text message
+              messageContentDiv.innerHTML = message.content;
           }
 
           if (message.role === "user") {
@@ -402,7 +492,57 @@
 
           chat.appendChild(messageContainer);
           chat.scrollTop = chat.scrollHeight;
-          return messageContainer; // Return the created message container
+          return messageContainer;
+      }
+
+      function runCode(code, language, messageContainer) {
+          // In a real app, you would send this to a backend service to execute
+          // For demo purposes, we'll simulate execution for JavaScript
+          
+          const runResultDiv = messageContainer.querySelector('.run-result');
+          if (runResultDiv) {
+              runResultDiv.remove();
+          }
+
+          const newRunResultDiv = document.createElement("div");
+          newRunResultDiv.className = "run-result";
+          
+          const runResultTitle = document.createElement("div");
+          runResultTitle.className = "run-result-title";
+          runResultTitle.textContent = "Natija:";
+          
+          const runResultContent = document.createElement("div");
+          runResultContent.textContent = "Ishga tushirilmoqda...";
+          
+          newRunResultDiv.appendChild(runResultTitle);
+          newRunResultDiv.appendChild(runResultContent);
+          
+          messageContainer.querySelector('.message-content').appendChild(newRunResultDiv);
+          
+          // Simulate execution delay
+          setTimeout(() => {
+              if (language === 'javascript' || language === 'js') {
+                  try {
+                      // In a real app, NEVER use eval() - this is just for demo
+                      const originalConsoleLog = console.log;
+                      let output = '';
+                      
+                      console.log = function() {
+                          output += Array.from(arguments).join(' ') + '\n';
+                          originalConsoleLog.apply(console, arguments);
+                      };
+                      
+                      eval(code);
+                      console.log = originalConsoleLog;
+                      
+                      runResultContent.textContent = output || "Kod muvaffaqiyatli ishga tushdi (hech qanday chiqish yo'q).";
+                  } catch (err) {
+                      runResultContent.textContent = `Xato: ${err.message}`;
+                  }
+              } else {
+                  runResultContent.textContent = "Ushbu til uchun demo rejimida ishga tushirish imkoniyati mavjud emas. Haqiqiy ilovada bu backend xizmati orqali amalga oshiriladi.";
+              }
+          }, 1000);
       }
 
       document.addEventListener('DOMContentLoaded', () => {
@@ -436,9 +576,9 @@
           textarea.value = "";
           sendBtn.disabled = true;
 
-          // Create and add the loading message element with animation
+          // Create loading message
           const loadingMessageContainer = document.createElement("div");
-          loadingMessageContainer.className = `message-bubble-container assistant loading-indicator`; // Add a class to easily identify
+          loadingMessageContainer.className = `message-bubble-container assistant loading-indicator`;
 
           const avatar = document.createElement("div");
           avatar.className = "avatar";
@@ -461,38 +601,48 @@
           chat.scrollTop = chat.scrollHeight;
 
           try {
-              const res = await fetch("https://math-genius.onrender.com/ask", {
-                  method: "POST",
-                  headers: {
-                      "Content-Type": "application/json"
-                  },
-                  body: JSON.stringify({ question: q })
-              });
-              const data = await res.json();
+              // In a real app, you would call your backend API here
+              // For demo, we'll simulate a response
+              setTimeout(() => {
+                  // Remove loading message
+                  loadingMessageContainer.remove();
 
-              // Remove the loading message
-              loadingMessageContainer.remove();
+                  // Check if the question is about code
+                  if (q.toLowerCase().includes("kod") || q.toLowerCase().includes("code") || 
+                      q.toLowerCase().includes("dastur") || q.toLowerCase().includes("program")) {
+                      // Simulate code response
+                      const codeExample = `// Salom dunyo dasturi
+function salomDunyo() {
+    console.log("Salom, Dunyo!");
+    return "Mista AI dan salom!";
+}
 
-              if (data.error) {
-                  addMessageToChat({ role: "assistant", content: "❌ Xatolik: " + data.error, type: "text" });
-              } else if (data.latex_image_url) {
-                  addMessageToChat({
-                      role: "assistant",
-                      content: data.answer,
-                      type: "latex",
-                      latexImageUrl: data.latex_image_url
-                  });
-              } else {
-                  addMessageToChat({
-                      role: "assistant",
-                      content: data.answer || "❗ Javob topilmadi.",
-                      type: "text"
-                  });
-              }
+salomDunyo();`;
+
+                      addMessageToChat({
+                          role: "assistant",
+                          content: "Sizning kod so'rovingizga javob. Quyida kod va tushuntirish berilgan:",
+                          type: "code",
+                          code: codeExample,
+                          language: "javascript",
+                          explanation: "Bu JavaScript dasturi 'Salom, Dunyo!' xabarini konsolga chiqaradi va qaytaradi. Funktsiya yaratilgan va chaqirilgan."
+                      });
+                  } else {
+                      // Regular text response
+                      addMessageToChat({
+                          role: "assistant",
+                          content: "Bu oddiy savolingizga javob. Agar kod so'rov bo'lsa, men kodni alohida ko'rsatib, tushuntirish beraman.",
+                          type: "text"
+                      });
+                  }
+              }, 1500);
           } catch (err) {
-              // Remove the loading message even on error
               loadingMessageContainer.remove();
-              addMessageToChat({ role: "assistant", content: "❌ Tarmoqda xatolik: " + err.message, type: "text" });
+              addMessageToChat({ 
+                  role: "assistant", 
+                  content: "❌ Xatolik yuz berdi: " + err.message, 
+                  type: "text" 
+              });
           }
       }
   </script>
