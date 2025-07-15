@@ -1,456 +1,536 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Math Genius AI Yordamchi</title>
-<link rel="icon" type="image/png" href="logo.jpg" />
-<style>
-/* Global CSS Variables for Professional Theme */
-:root {
---background: #ffffff; /* White */
---foreground: #202123; /* Dark Gray */
---primary: #10a37f; /* Green */
---primary-foreground: #ffffff; /* White text on primary */
---secondary: #f7f7f8; /* Light Gray for secondary elements */
---secondary-foreground: #202123; /* Dark text on secondary */
---muted: #f0f0f0; /* Very Light Gray for muted backgrounds */
---muted-foreground: #6b7280; /* Medium Gray for muted text */
---border: #e0e0e0; /* Light border */
---input: #e0e0e0; /* Light input border */
---card-background: #ffffff; /* White card background */
---card-border: #e0e0e0; /* Light card border */
-}
-body {
-margin: 0;
-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-background-color: var(--background);
-color: var(--foreground);
-transition: background-color 0.3s ease, color 0.3s ease;
-display: flex;
-flex-direction: column;
-min-height: 100vh;
-}
-header {
-display: flex;
-justify-content: space-between;
-align-items: center;
-padding: 1rem;
-border-bottom: 1px solid var(--border);
-background-color: var(--background);
-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-.logo-container {
-display: flex;
-align-items: center;
-gap: 0.5rem;
-}
-.logo-container img {
-height: 32px; /* Slightly smaller for header */
-width: 32px;
-}
-.logo-text {
-font-size: 1.25rem; /* Adjusted font size */
-font-weight: bold;
-}
-.logo-text .mista {
-color: var(--primary);
-}
-main {
-flex: 1;
-display: flex;
-flex-direction: column;
-padding: 1rem;
-max-width: 800px;
-width: 100%;
-margin: 0 auto;
-overflow: hidden;
-}
-.chat-area {
-flex: 1;
-background-color: var(--secondary); /* Lighter background for chat area */
-border-radius: 0.5rem;
-padding: 1rem;
-overflow-y: auto;
-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
-margin-bottom: 1rem;
-display: flex;
-flex-direction: column;
-}
-.message-bubble-container {
-display: flex;
-align-items: flex-start; /* Align to top for multi-line messages */
-gap: 0.75rem;
-margin-bottom: 1rem;
-max-width: 100%;
-}
-.message-bubble-container.user {
-justify-content: flex-end;
-}
-.message-bubble-container.assistant {
-justify-content: flex-start;
-}
-.avatar {
-flex-shrink: 0; /* Prevent avatar from shrinking */
-width: 32px;
-height: 32px;
-border-radius: 50%;
-display: flex;
-justify-content: center;
-align-items: center;
-font-size: 0.875rem;
-font-weight: bold;
-color: var(--primary-foreground);
-background-color: var(--primary);
-text-transform: uppercase;
-}
-.message-bubble-container.user .avatar {
-background-color: #a0a0a0; /* Neutral gray for user avatar */
-}
-.message-content {
-max-width: calc(100% - 32px - 0.75rem); /* Account for avatar and gap */
-padding: 0.75rem 1rem;
-border-radius: 0.75rem;
-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-line-height: 1.5;
-font-size: 0.9rem;
-word-wrap: break-word; /* Ensure long words break */
-}
-.message-bubble-container.user .message-content {
-background-color: var(--primary);
-color: var(--primary-foreground);
-border-bottom-right-radius: 0.25rem; /* Small tail effect */
-}
-.message-bubble-container.assistant .message-content {
-background-color: var(--card-background);
-color: var(--foreground);
-border-bottom-left-radius: 0.25rem; /* Small tail effect */
-border: 1px solid var(--border); /* Add border for assistant messages */
-}
-.message-content .code-container {
-background-color: var(--card-background);
-padding: 0.5rem;
-border-radius: 0.375rem;
-border: 1px solid var(--card-border);
-margin-top: 0.5rem;
-display: inline-block; /* To wrap content */
-}
-.message-content .code-container pre {
-margin: 0;
-background-color: var(--muted);
-padding: 0.5rem;
-border-radius: 0.375rem;
-overflow: auto;
-}
-.message-content .code-container .copy-button {
-background-color: var(--primary);
-color: var(--primary-foreground);
-border: none;
-border-radius: 0.375rem;
-padding: 0.5rem;
-cursor: pointer;
-display: inline-block;
-margin-top: 0.5rem;
-}
-.message-content .code-container .copy-button:hover {
-background-color: #0e8a6a; /* Darker green for hover */
-}
-.message-content .code-container .run-button {
-background-color: var(--primary);
-color: var(--primary-foreground);
-border: none;
-border-radius: 0.375rem;
-padding: 0.5rem;
-cursor: pointer;
-display: inline-block;
-margin-top: 0.5rem;
-margin-left: 0.5rem;
-}
-.message-content .code-container .run-button:hover {
-background-color: #0e8a6a; /* Darker green for hover */
-}
-.input-area {
-display: flex;
-align-items: flex-end;
-gap: 0.75rem;
-padding: 1rem;
-border-top: 1px solid var(--border);
-background-color: var(--background);
-border-radius: 0.5rem;
-box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
-margin-top: 1rem;
-}
-.input-area textarea {
-flex: 1;
-min-height: 48px; /* Increased min-height */
-max-height: 150px; /* Max height for textarea */
-resize: none;
-padding: 0.75rem 1rem;
-border: 1px solid var(--input);
-border-radius: 0.5rem;
-background-color: var(--background);
-color: var(--foreground);
-font-size: 1rem;
-transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-.input-area textarea:focus {
-outline: none;
-border-color: var(--primary);
-box-shadow: 0 0 0 2px rgba(16, 163, 127, 0.2); /* Use primary color for focus ring */
-}
-.send-button {
-background-color: var(--primary);
-color: var(--primary-foreground);
-border: none;
-border-radius: 0.5rem;
-padding: 0.75rem;
-cursor: pointer;
-display: flex;
-justify-content: center;
-align-items: center;
-transition: background-color 0.2s ease, opacity 0.2s ease;
-height: 48px; /* Match textarea height */
-width: 48px;
-}
-.send-button:hover:not(:disabled) {
-background-color: #0e8a6a; /* Darker green for hover */
-}
-.send-button:disabled {
-opacity: 0.5;
-cursor: not-allowed;
-}
-.send-button svg {
-width: 20px;
-height: 20px;
-}
-footer {
-display: flex;
-justify-content: center;
-align-items: center;
-padding: 1rem;
-border-top: 1px solid var(--border);
-background-color: var(--background);
-font-size: 0.8rem;
-color: var(--muted-foreground);
-box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.03);
-}
-footer a {
-color: var(--primary);
-text-decoration: none;
-transition: text-decoration 0.2s ease;
-margin-left: 0.25rem;
-}
-footer a:hover {
-text-decoration: underline;
-}
-/* Responsive adjustments */
-@media (max-width: 600px) {
-header, .input-area, footer {
-padding: 0.75rem;
-}
-.logo-text {
-font-size: 1.1rem;
-}
-.logo-container img {
-height: 28px;
-width: 28px;
-}
-.chat-area {
-padding: 0.75rem;
-}
-.message-content {
-font-size: 0.85rem;
-padding: 0.6rem 0.8rem;
-}
-.input-area textarea {
-font-size: 0.9rem;
-min-height: 40px;
-padding: 0.6rem 0.8rem;
-}
-.send-button {
-height: 40px;
-width: 40px;
-padding: 0.6rem;
-}
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Math Genius  AI || Ilyos Xudayberganov</title>
+  <link rel="icon" type="image/png" href="logo.jpg" />
+  <style>
+      :root {
+          --background: #ffffff;
+          --foreground: #202123;
+          --primary: #6d28d9;
+          --primary-foreground: #ffffff;
+          --secondary: #f7f7f8;
+          --secondary-foreground: #202123;
+          --muted: #f0f0f0;
+          --muted-foreground: #6b7280;
+          --border: #e0e0e0;
+          --input: #e0e0e0;
+          --card-background: #ffffff;
+          --card-border: #e0e0e0;
+          --code-background: #1e1e1e;
+          --code-foreground: #d4d4d4;
+          --image-border: #e0e0e0;
+      }
+      .dark-mode {
+          --background: #202123;
+          --foreground: #ececf1;
+          --primary: #7c3aed;
+          --primary-foreground: #ffffff;
+          --secondary: #343541;
+          --secondary-foreground: #ececf1;
+          --muted: #444654;
+          --muted-foreground: #a0aec0;
+          --border: #565869;
+          --input: #565869;
+          --card-background: #343541;
+          --card-border: #565869;
+          --code-background: #1e1e1e;
+          --code-foreground: #d4d4d4;
+          --image-border: #565869;
+      }
+      body {
+          margin: 0;
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+          background-color: var(--background);
+          color: var(--foreground);
+          transition: background-color 0.3s, color 0.3s;
+          display: flex;
+          flex-direction: column;
+          min-height: 100vh;
+      }
+      header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 1rem;
+          border-bottom: 1px solid var(--border);
+          background-color: var(--background);
+      }
+      .logo-container {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+      }
+      .logo-container img {
+          height: 32px;
+          width: 32px;
+          border-radius: 50%;
+      }
+      .logo-text {
+          font-size: 1.25rem;
+          font-weight: bold;
+          color: var(--primary);
+      }
+      .theme-toggle-button {
+          background: none;
+          border: none;
+          cursor: pointer;
+          font-size: 1.2rem;
+          color: var(--foreground);
+          padding: 0.5rem;
+          border-radius: 0.375rem;
+      }
+      .theme-toggle-button:hover {
+          background-color: var(--muted);
+      }
+      main {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          padding: 1rem;
+          max-width: 800px;
+          width: 100%;
+          margin: 0 auto;
+      }
+      .chat-area {
+          flex: 1;
+          background-color: var(--secondary);
+          border-radius: 0.5rem;
+          padding: 1rem;
+          overflow-y: auto;
+          margin-bottom: 1rem;
+      }
+      .message-bubble-container {
+          display: flex;
+          align-items: flex-start;
+          gap: 0.75rem;
+          margin-bottom: 1rem;
+          max-width: 100%;
+      }
+      .message-bubble-container.user {
+          justify-content: flex-end;
+      }
+      .message-bubble-container.assistant {
+          justify-content: flex-start;
+      }
+      .avatar {
+          flex-shrink: 0;
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-weight: bold;
+          color: var(--primary-foreground);
+          background-color: var(--primary);
+      }
+      .message-bubble-container.user .avatar {
+          background-color: #a0a0a0;
+      }
+      .message-content {
+          max-width: calc(100% - 32px - 0.75rem);
+          padding: 0.75rem 1rem;
+          border-radius: 0.75rem;
+          line-height: 1.5;
+          font-size: 0.9rem;
+          word-wrap: break-word;
+      }
+      .message-bubble-container.user .message-content {
+          background-color: var(--primary);
+          color: var(--primary-foreground);
+      }
+      .message-bubble-container.assistant .message-content {
+          background-color: var(--card-background);
+          color: var(--foreground);
+          border: 1px solid var(--border);
+      }
+      .code-block {
+          margin: 0.5rem 0;
+          border-radius: 0.375rem;
+          overflow: hidden;
+          border: 1px solid var(--border);
+      }
+      .code-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 0.5rem 1rem;
+          background-color: var(--code-background);
+          color: var(--code-foreground);
+          font-family: monospace;
+      }
+      .code-actions {
+          display: flex;
+          gap: 0.5rem;
+      }
+      .code-action-btn {
+          background: none;
+          border: none;
+          color: var(--code-foreground);
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 0.25rem;
+          padding: 0.25rem 0.5rem;
+          border-radius: 0.25rem;
+      }
+      pre {
+          margin: 0;
+          padding: 1rem;
+          background-color: var(--code-background);
+          color: var(--code-foreground);
+          font-family: monospace;
+          overflow-x: auto;
+      }
+      .image-container {
+          margin: 0.5rem 0;
+          border-radius: 0.375rem;
+          overflow: hidden;
+          border: 1px solid var(--image-border);
+      }
+      .image-container img {
+          width: 100%;
+          height: auto;
+          display: block;
+      }
+      .image-actions {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 0.5rem 1rem;
+          background-color: var(--muted);
+      }
+      .image-download-btn {
+          background-color: var(--primary);
+          color: var(--primary-foreground);
+          border: none;
+          border-radius: 0.25rem;
+          padding: 0.25rem 0.5rem;
+          cursor: pointer;
+      }
+      .loading-dots {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          padding: 0.5rem 0;
+      }
+      .loading-dots span {
+          width: 8px;
+          height: 8px;
+          background-color: var(--muted-foreground);
+          border-radius: 50%;
+          animation: bounce 1.4s infinite ease-in-out both;
+      }
+      .loading-dots span:nth-child(1) {
+          animation-delay: -0.32s;
+      }
+      .loading-dots span:nth-child(2) {
+          animation-delay: -0.16s;
+      }
+      @keyframes bounce {
+          0%, 80%, 100% { transform: scale(0); }
+          40% { transform: scale(1); }
+      }
+      .input-area {
+          display: flex;
+          align-items: flex-end;
+          gap: 0.75rem;
+          padding: 1rem;
+          border-top: 1px solid var(--border);
+          background-color: var(--background);
+      }
+      .input-area textarea {
+          flex: 1;
+          min-height: 48px;
+          max-height: 150px;
+          resize: none;
+          padding: 0.75rem 1rem;
+          border: 1px solid var(--input);
+          border-radius: 0.5rem;
+          background-color: var(--background);
+          color: var(--foreground);
+      }
+      .send-button {
+          background-color: var(--primary);
+          color: var(--primary-foreground);
+          border: none;
+          border-radius: 0.5rem;
+          padding: 0.75rem;
+          cursor: pointer;
+          height: 48px;
+          width: 48px;
+      }
+      .send-button:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+      }
+      footer {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 1rem;
+          border-top: 1px solid var(--border);
+          background-color: var(--background);
+          font-size: 0.8rem;
+          color: var(--muted-foreground);
+      }
+      @media (max-width: 600px) {
+          header, .input-area, footer { padding: 0.75rem; }
+          .message-content { font-size: 0.85rem; }
+      }
+  </style>
 </head>
-<body>
-<header>
-<div class="logo-container">
-<img src="./logo.jpg" alt="Mista Logo" />
-<h1 class="logo-text">
-<span class="mista">Math Genius AI</span>
-</h1>
-</div>
-</header>
-<main>
-<div class="chat-area" id="chat-area">
-<!-- Messages will be dynamically added here by JavaScript -->
-</div>
-<div class="input-area">
-<textarea id="question" rows="1" placeholder="Savolingizni kiriting..." oninput="autoResize(this)"></textarea>
-<button onclick="send()" id="sendBtn" class="send-button" disabled>
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send"><path d="m22 2-7 20-4-9-9-4 20-7Z"/><path d="M22 2 11 13"/></svg>
-</button>
-</div>
-</main>
-<footer>
-<p>Qo'shimcha ✨ | <a href="https://t.me/mathgeniusai_bot" target="_blank" rel="noopener noreferrer">Telegram Bot</a></p>
-<p style="margin-left: 1rem;">Ilyos Xudaybergaov tomonidan yaratilgan.</p>
-</footer>
-<script>
-const chat = document.getElementById("chat-area");
-const textarea = document.getElementById("question");
-const sendBtn = document.getElementById("sendBtn");
+<body class="light-mode">
+  <header>
+      <div class="logo-container">
+          <img src="./logo.jpg" alt="Mista AI Logo" />
+          <h1 class="logo-text">Math Genius  AI || Ilyos Xudayberganov</h1>
+      </div>
+      <button class="theme-toggle-button" onclick="toggleTheme()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 17.66l1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M4.93 19.07l1.41-1.41"/><path d="M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+  </header>
+  <main>
+      <div class="chat-area" id="chat-area"></div>
+      <div class="input-area">
+          <textarea id="question" rows="1" placeholder="Savolingizni kiriting..." oninput="autoResize(this)"></textarea>
+          <button onclick="send()" id="sendBtn" class="send-button" disabled>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7Z"/><path d="M22 2 11 13"/></svg>
+          </button>
+      </div>
+  </main>
+  <footer>
+      <p>Ilyos Xudaybergaov tomonidan yaratilgan</p>
+  </footer>
+  <script>
+      // API Configuration
+      const API_ENDPOINT = "https://math-genius.onrender.com/ask"; // Sizning API manzilingiz
+      
+      // DOM Elements
+      const chat = document.getElementById("chat-area");
+      const textarea = document.getElementById("question");
+      const sendBtn = document.getElementById("sendBtn");
+      
+      // Initial message
+      const initialMessage = {
+          role: "assistant",
+          content: "Assalomu alaykum! Men Mista AI yordamchingizman. Istalgan savolingizga javob bera olaman. Sizga qanday yordam bera olaman?"
+      };
 
-const initialMessage = {
-role: "assistant",
-content: "Assalomu alaykum! Men Math Genius AI yordamchingizman. Istalgan savolni yozing — men sizga javob beraman. Sizga qanday yordam bera olaman?"
-};
+      // Add message to chat
+      function addMessageToChat(message) {
+          const messageContainer = document.createElement("div");
+          messageContainer.className = `message-bubble-container ${message.role}`;
 
-function addMessageToChat(message) {
-const messageContainer = document.createElement("div");
-messageContainer.className = `message-bubble-container ${message.role}`;
+          const avatar = document.createElement("div");
+          avatar.className = "avatar";
+          avatar.innerText = message.role === "user" ? "Siz" : "AI";
 
-const avatar = document.createElement("div");
-avatar.className = "avatar";
-avatar.innerText = message.role === "user" ? "Siz" : "AI";
+          const messageContentDiv = document.createElement("div");
+          messageContentDiv.className = "message-content";
 
-const messageContentDiv = document.createElement("div");
-messageContentDiv.className = "message-content";
+          if (message.type === "code") {
+              const codeBlock = document.createElement("div");
+              codeBlock.className = "code-block";
+              
+              const codeHeader = document.createElement("div");
+              codeHeader.className = "code-header";
+              codeHeader.innerHTML = `<span>${message.language || 'code'}</span>`;
+              
+              const codeActions = document.createElement("div");
+              codeActions.className = "code-actions";
+              
+              const copyBtn = document.createElement("button");
+              copyBtn.className = "code-action-btn";
+              copyBtn.innerHTML = `Nusxalash`;
+              copyBtn.onclick = () => {
+                  navigator.clipboard.writeText(message.code);
+                  copyBtn.textContent = "Nusxalandi!";
+                  setTimeout(() => copyBtn.textContent = "Nusxalash", 2000);
+              };
+              
+              codeActions.appendChild(copyBtn);
+              codeHeader.appendChild(codeActions);
+              codeBlock.appendChild(codeHeader);
+              
+              const pre = document.createElement("pre");
+              pre.textContent = message.code;
+              codeBlock.appendChild(pre);
+              
+              messageContentDiv.appendChild(codeBlock);
+          } else if (message.type === "image") {
+              const imageContainer = document.createElement("div");
+              imageContainer.className = "image-container";
+              
+              const img = document.createElement("img");
+              img.src = message.imageUrl;
+              img.alt = "Generated image";
+              
+              const imageActions = document.createElement("div");
+              imageActions.className = "image-actions";
+              
+              const downloadBtn = document.createElement("button");
+              downloadBtn.className = "image-download-btn";
+              downloadBtn.textContent = "Yuklab olish";
+              downloadBtn.onclick = () => downloadImage(message.imageUrl);
+              
+              imageActions.appendChild(downloadBtn);
+              imageContainer.appendChild(img);
+              imageContainer.appendChild(imageActions);
+              messageContentDiv.appendChild(imageContainer);
+          } else {
+              messageContentDiv.textContent = message.content;
+          }
 
-if (message.type === "code") {
-const codeContainer = document.createElement("div");
-codeContainer.className = "code-container";
+          if (message.role === "user") {
+              messageContainer.appendChild(messageContentDiv);
+              messageContainer.appendChild(avatar);
+          } else {
+              messageContainer.appendChild(avatar);
+              messageContainer.appendChild(messageContentDiv);
+          }
 
-const pre = document.createElement("pre");
-pre.innerText = message.content;
-codeContainer.appendChild(pre);
+          chat.appendChild(messageContainer);
+          chat.scrollTop = chat.scrollHeight;
+      }
 
-const copyButton = document.createElement("button");
-copyButton.className = "copy-button";
-copyButton.innerText = "Nusxalash";
-copyButton.onclick = () => {
-navigator.clipboard.writeText(message.content);
-copyButton.innerText = "Nusxalandi!";
-setTimeout(() => {
-copyButton.innerText = "Nusxalash";
-}, 2000);
-};
-codeContainer.appendChild(copyButton);
+      // Download image
+      function downloadImage(url) {
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'mista-ai-image.jpg';
+          a.click();
+      }
 
-const runButton = document.createElement("button");
-runButton.className = "run-button";
-runButton.innerText = "Ijro etish";
-runButton.onclick = () => {
-// Run the code (this is a placeholder, you need to implement the actual code execution)
-alert("Kod ijro etildi!");
-};
-codeContainer.appendChild(runButton);
+      // Auto-resize textarea
+      function autoResize(textarea) {
+          textarea.style.height = 'auto';
+          textarea.style.height = textarea.scrollHeight + 'px';
+      }
 
-messageContentDiv.appendChild(codeContainer);
-} else {
-const textPart = document.createElement("p");
-textPart.innerText = message.content;
-messageContentDiv.appendChild(textPart);
-}
+      // Toggle theme
+      function toggleTheme() {
+          document.body.classList.toggle("dark-mode");
+      }
 
-if (message.role === "user") {
-messageContainer.appendChild(messageContentDiv);
-messageContainer.appendChild(avatar);
-} else {
-messageContainer.appendChild(avatar);
-messageContainer.appendChild(messageContentDiv);
-}
+      // Send message to API
+      async function send() {
+          const question = textarea.value.trim();
+          if (!question) return;
 
-chat.appendChild(messageContainer);
-chat.scrollTop = chat.scrollHeight;
-return messageContainer; // Return the created message container
-}
+          // Add user message
+          addMessageToChat({
+              role: "user",
+              content: question,
+              type: "text"
+          });
 
-document.addEventListener('DOMContentLoaded', () => {
-addMessageToChat(initialMessage);
-autoResize(textarea);
-});
+          textarea.value = "";
+          sendBtn.disabled = true;
 
-textarea.addEventListener("input", () => {
-autoResize(textarea);
-sendBtn.disabled = textarea.value.trim().length === 0;
-});
+          // Add loading indicator
+          const loadingContainer = document.createElement("div");
+          loadingContainer.className = "message-bubble-container assistant";
+          
+          const loadingAvatar = document.createElement("div");
+          loadingAvatar.className = "avatar";
+          loadingAvatar.textContent = "AI";
+          
+          const loadingContent = document.createElement("div");
+          loadingContent.className = "message-content";
+          
+          const loadingDots = document.createElement("div");
+          loadingDots.className = "loading-dots";
+          for (let i = 0; i < 3; i++) {
+              const dot = document.createElement("span");
+              loadingDots.appendChild(dot);
+          }
+          
+          loadingContent.appendChild(loadingDots);
+          loadingContainer.appendChild(loadingAvatar);
+          loadingContainer.appendChild(loadingContent);
+          chat.appendChild(loadingContainer);
+          chat.scrollTop = chat.scrollHeight;
 
-function autoResize(textarea) {
-textarea.style.height = 'auto';
-textarea.style.height = textarea.scrollHeight + 'px';
-}
+          try {
+              // Call API
+              const response = await fetch(API_ENDPOINT, {
+                  method: "POST",
+                  headers: {
+                      "Content-Type": "application/json"
+                  },
+                  body: JSON.stringify({ question })
+              });
 
-async function send() {
-const q = textarea.value.trim();
-if (!q) return;
+              const data = await response.json();
 
-addMessageToChat({ role: "user", content: q, type: "text" });
-textarea.value = "";
-sendBtn.disabled = true;
+              // Remove loading indicator
+              loadingContainer.remove();
 
-// Create and add the loading message element with animation
-const loadingMessageContainer = document.createElement("div");
-loadingMessageContainer.className = `message-bubble-container assistant loading-indicator`; // Add a class to easily identify
+              if (data.error) {
+                  addMessageToChat({
+                      role: "assistant",
+                      content: `Xato: ${data.error}`,
+                      type: "text"
+                  });
+                  return;
+              }
 
-const avatar = document.createElement("div");
-avatar.className = "avatar";
-avatar.innerText = "AI";
+              // Check response type and display accordingly
+              if (data.latex_image_url) {
+                  // Math response with image
+                  addMessageToChat({
+                      role: "assistant",
+                      content: data.answer,
+                      type: "image",
+                      imageUrl: data.latex_image_url
+                  });
+              } else if (data.code) {
+                  // Code response
+                  addMessageToChat({
+                      role: "assistant",
+                      content: data.explanation || "Kodingiz:",
+                      type: "code",
+                      code: data.code,
+                      language: data.language || 'text'
+                  });
+              } else {
+                  // Regular text response
+                  addMessageToChat({
+                      role: "assistant",
+                      content: data.answer || "Javob topilmadi",
+                      type: "text"
+                  });
+              }
+          } catch (error) {
+              loadingContainer.remove();
+              addMessageToChat({
+                  role: "assistant",
+                  content: `API bilan bog'lanishda xato: ${error.message}`,
+                  type: "text"
+              });
+          }
+      }
 
-const messageContentDiv = document.createElement("div");
-messageContentDiv.className = "message-content";
-
-const loadingDotsContainer = document.createElement("div");
-loadingDotsContainer.className = "loading-dots";
-for (let i = 0; i < 3; i++) {
-const dot = document.createElement("span");
-loadingDotsContainer.appendChild(dot);
-}
-messageContentDiv.appendChild(loadingDotsContainer);
-
-loadingMessageContainer.appendChild(avatar);
-loadingMessageContainer.appendChild(messageContentDiv);
-chat.appendChild(loadingMessageContainer);
-chat.scrollTop = chat.scrollHeight;
-
-try {
-const res = await fetch("https://math-genius.onrender.com/ask", {
-method: "POST",
-headers: {
-"Content-Type": "application/json"
-},
-body: JSON.stringify({ question: q })
-});
-const data = await res.json();
-
-// Remove the loading message
-loadingMessageContainer.remove();
-
-if (data.error) {
-addMessageToChat({ role: "assistant", content: "❌ Xatolik: " + data.error, type: "text" });
-} else if (data.latex_image_url) {
-addMessageToChat({
-role: "assistant",
-content: data.answer,
-type: "latex",
-latexImageUrl: data.latex_image_url
-});
-} else {
-addMessageToChat({
-role: "assistant",
-content: data.answer || "❗ Javob topilmadi.",
-type: "text"
-});
-}
-} catch (err) {
-// Remove the loading message even on error
-loadingMessageContainer.remove();
-addMessageToChat({ role: "assistant", content: "❌ Tarmoqda xatolik: " + err.message, type: "text" });
-}
-}
-</script>
+      // Initialize chat
+      document.addEventListener('DOMContentLoaded', () => {
+          addMessageToChat(initialMessage);
+          textarea.addEventListener("input", () => {
+              autoResize(textarea);
+              sendBtn.disabled = textarea.value.trim().length === 0;
+          });
+          
+          // Handle Enter key press
+          textarea.addEventListener("keydown", (e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  send();
+              }
+          });
+      });
+  </script>
 </body>
 </html>
